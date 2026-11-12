@@ -1,0 +1,261 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="720" viewBox="0 0 720 720" fill="none">
+  <defs>
+    <g id="book"><path d="M-17-12q8-4 17 1v23q-9-5-17-1zM17-12q-8-4-17 1v23q9-5 17-1zM0-11v23M-13-7l7-1m20 1-7-1"/></g>
+    <g id="pencil"><path d="m-12 12 3-9 17-17 7 7L-2 10zM-9 3l7 7m10-24 7 7M-13 16l7-4"/></g>
+    <g id="backpack"><path d="M-12-8q0-9 12-9t12 9v20q0 4-4 4h-16q-4 0-4-4zM-7-7v-4h14v4M-12-3h24M-7 1h14v9H-7zM-8 12v4m16-4v4"/></g>
+    <g id="cap"><path d="m-18-3 18-11 18 11L0 8zM-11 2v8q11 8 22 0V2M18-3v15m0 0q-4 0-4 4"/></g>
+    <g id="star"><path d="m0-16 4.5 10 11 1-8 7 2.5 11L0 7l-10 6 2.5-11-8-7 11-1z"/><circle r="2"/></g>
+    <g id="ruler"><path d="M-17-7h34v14h-34zM-11-7v6m6-6v4m6-4v6m6-6v4m6-4v6"/></g>
+    <g id="globe"><circle r="15"/><path d="M-15 0h30M0-15c7 7 7 23 0 30M0-15c-7 7-7 23 0 30M-11-10q11 7 22 0M-11 10q11-7 22 0"/></g>
+    <g id="beaker"><path d="M-6-16h12m-9 0v11l-9 17q-2 4 3 4h18q5 0 3-4L3-5v-11M-11 7q11-5 22 0m-17 5h12"/></g>
+    <g id="atom"><circle r="3"/><ellipse rx="17" ry="7"/><ellipse rx="17" ry="7" transform="rotate(60)"/><ellipse rx="17" ry="7" transform="rotate(120)"/></g>
+    <g id="bulb"><path d="M-10-2a10 10 0 1 1 20 0q0 6-5 10H-5q-5-4-5-10ZM-5 12h10m-9 4h8M0-16v-3m-14 8-3-2m31 2 3-2"/></g>
+    <g id="bus"><path d="M-17 9V-8q0-5 5-5h24q5 0 5 5V9M-17 3h34M-12-8h8v8h-8zm12 0h12v8H0zM-12 9v4m24-4v4"/><circle cx="-10" cy="10" r="3"/><circle cx="10" cy="10" r="3"/></g>
+    <g id="trophy"><path d="M-8-13h16v13q0 9-8 9t-8-9zM-8-9h-8v4q0 7 9 7m15-11h8v4q0 7-9 7M0 9v5m-7 3H7m-7-8v3"/></g>
+    <g id="owl"><path d="M-13-12 0-7l13-5v17q0 12-13 15Q-13 17-13 5zM-13-12l6 8m20-8-6 8"/><circle cx="-5" cy="0" r="4"/><circle cx="5" cy="0" r="4"/><path d="m-2 7 2 3 2-3m-10 10-4 4m20-4 4 4"/></g>
+    <g id="rocket"><path d="M-3 11q-5 4-8 3 0-6 4-10M-2 10q-3-14 12-25 5 16-9 25M1 1l4 4m-9 9-2 7m10-11 7 3"/><circle cx="5" cy="-7" r="3"/></g>
+    <g id="apple"><path d="M0-8q-8-8-14 1-7 11 3 21 5 5 11 0 6 5 11 0 10-10 3-21-6-9-14-1zM0-8q-1-8 7-10m-6 8q7-7 13-3"/></g>
+    <g id="calculator"><rect x="-12" y="-17" width="24" height="34" rx="3"/><rect x="-8" y="-12" width="16" height="7" rx="1"/><path d="M-7 1h2m5 0h2m5 0h2m-14 7h2m5 0h2m5 0h2m-14 7h2m5 0h2"/></g>
+    <g id="compass"><circle r="15"/><path d="m-7 8 3-12 11-4L4 4zM-4-4l8 8M0-19v4m0 30v4m-19-19h4m30 0h4"/></g>
+    <g id="scissors"><circle cx="-7" cy="8" r="5"/><circle cx="7" cy="8" r="5"/><path d="m-4 4 17-17M4 4-13-13m13 13v13"/></g>
+    <g id="notebook"><rect x="-12" y="-16" width="24" height="32" rx="2"/><path d="M-7-16v32m5-23h10M-2-1h10M-2 6h10M-15-10h3m-3 8h3m-3 8h3m-3 8h3"/></g>
+    <g id="flower"><circle r="5"/><ellipse cy="-11" rx="5" ry="7"/><ellipse cy="11" rx="5" ry="7"/><ellipse cx="-11" rx="7" ry="5"/><ellipse cx="11" rx="7" ry="5"/><path d="M0 16v5m0-3q-7-5-11 0"/></g>
+    <g id="heart"><path d="M0 14S-16 4-16-5a8 8 0 0 1 15-4l1 2 1-2a8 8 0 0 1 15 4C16 4 0 14 0 14Z"/><path d="M-5-3q3-4 7 0"/></g>
+    <g id="planet"><circle r="10"/><ellipse rx="18" ry="6" transform="rotate(-22)"/><path d="M-4-3h2m5 6h2"/></g>
+    <g id="music"><path d="M5-15v22M5-15l11-3v22M5-8l11-3"/><ellipse cx="-1" cy="8" rx="6" ry="4"/><ellipse cx="10" cy="5" rx="6" ry="4"/></g>
+    <g id="cloud"><path d="M-12 8a7 7 0 0 1-1-14 10 10 0 0 1 19-2 8 8 0 0 1 7 16zM-7 13h14"/></g>
+    <g id="magnifier"><circle cx="-3" cy="-3" r="10"/><path d="m4 4 11 11M-8-4q4-5 9-2"/></g>
+    <g id="puzzle"><path d="M-15-12h9q-2 7 4 7t4-7h13v9q-7-2-7 4t7 4v11H4q2-7-4-7t-4 7h-11V5q7 2 7-4t-7-4z"/></g>
+    <g id="paperplane"><path d="m-17-2 34-13-11 31-6-13-17-5Zm17 5 17-18"/></g>
+    <g id="clock"><circle r="14"/><path d="M0-9v10l7 4M-4-17h8m-4 0v3"/></g>
+    <g id="microscope"><path d="m-4-15 8 4-8 14-8-4zM-8 0l8 5m5-16 3-5m-9 28h16M-4 9q0 7 8 7m-12-7h12"/></g>
+    <g id="scales"><path d="M0-15v29m-12 2h24M-12-7h24M-12-7l-6 12h12l-6-12Zm24 0L6 5h12l-6-12Zm-3-8 3 8"/></g>
+    <g id="castle"><path d="M-15 15v-25l5 4 5-4 5 4 5-4 5 4v21zM-5 15V4q5-6 10 0v11M-15-10v-6h5v6m5 0v-6h5v6m5 0v-6h5v6"/></g>
+    <g id="bird"><path d="M-15 6q8-3 11-12 3 6 10 3 1 9-8 13-7 3-13-4Zm5-9 7 2m4-2 7-3m-17 13 3 5m-9-15q-4-5-8-3"/><circle cx="5" cy="-4" r="1"/></g>
+    <g id="diploma"><path d="M-14-11h28v18h-28zM-8-5h16M-8 0h11"/><circle cx="7" cy="8" r="5"/><path d="m4 12-1 7 4-3 4 3-1-7"/></g>
+  </defs>
+  <g stroke="#74638f" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".14">
+    <use href="#star" transform="translate(281.1 397.6) rotate(-112) scale(0.61)"/>
+    <use href="#pencil" transform="translate(381.0 105.1) rotate(-98) scale(0.91)"/>
+    <use href="#scissors" transform="translate(20.1 243.7) rotate(-88) scale(1.12)"/>
+    <use href="#scissors" transform="translate(740.1 243.7) rotate(-88) scale(1.12)"/>
+    <use href="#rocket" transform="translate(169.6 207.9) rotate(116) scale(1.01)"/>
+    <use href="#star" transform="translate(577.1 333.5) rotate(92) scale(0.55)"/>
+    <use href="#pencil" transform="translate(448.9 474.7) rotate(-25) scale(1.11)"/>
+    <use href="#bus" transform="translate(105.8 197.1) rotate(-178) scale(1.21)"/>
+    <use href="#rocket" transform="translate(164.3 432.0) rotate(-137) scale(1.03)"/>
+    <use href="#star" transform="translate(555.3 133.5) rotate(-3) scale(0.62)"/>
+    <use href="#microscope" transform="translate(401.0 147.4) rotate(61) scale(1.20)"/>
+    <use href="#flower" transform="translate(352.0 668.4) rotate(58) scale(0.92)"/>
+    <use href="#beaker" transform="translate(487.6 284.0) rotate(-113) scale(1.17)"/>
+    <use href="#heart" transform="translate(91.0 538.9) rotate(-163) scale(0.58)"/>
+    <use href="#compass" transform="translate(654.4 663.2) rotate(-60) scale(1.06)"/>
+    <use href="#book" transform="translate(101.9 610.0) rotate(30) scale(1.15)"/>
+    <use href="#ruler" transform="translate(399.4 292.1) rotate(-74) scale(1.00)"/>
+    <use href="#clock" transform="translate(194.5 307.6) rotate(-61) scale(0.68)"/>
+    <use href="#atom" transform="translate(411.4 257.7) rotate(-93) scale(1.06)"/>
+    <use href="#globe" transform="translate(487.3 427.8) rotate(-83) scale(1.15)"/>
+    <use href="#cap" transform="translate(122.4 48.0) rotate(-148) scale(0.83)"/>
+    <use href="#clock" transform="translate(639.6 473.2) rotate(90) scale(0.60)"/>
+    <use href="#flower" transform="translate(452.8 33.4) rotate(179) scale(1.20)"/>
+    <use href="#bulb" transform="translate(356.0 90.1) rotate(49) scale(0.87)"/>
+    <use href="#calculator" transform="translate(159.7 611.2) rotate(-87) scale(1.07)"/>
+    <use href="#heart" transform="translate(329.2 548.9) rotate(-136) scale(0.64)"/>
+    <use href="#calculator" transform="translate(604.2 30.3) rotate(-154) scale(1.05)"/>
+    <use href="#cap" transform="translate(445.2 364.1) rotate(141) scale(1.00)"/>
+    <use href="#scissors" transform="translate(51.3 683.6) rotate(-103) scale(0.95)"/>
+    <use href="#clock" transform="translate(615.7 309.5) rotate(-31) scale(0.64)"/>
+    <use href="#bulb" transform="translate(517.6 509.4) rotate(-92) scale(1.17)"/>
+    <use href="#microscope" transform="translate(234.9 609.5) rotate(-94) scale(1.11)"/>
+    <use href="#notebook" transform="translate(48.2 254.9) rotate(169) scale(0.88)"/>
+    <use href="#clock" transform="translate(363.5 172.0) rotate(98) scale(0.57)"/>
+    <use href="#trophy" transform="translate(417.6 410.8) rotate(-88) scale(0.87)"/>
+    <use href="#bird" transform="translate(691.4 608.0) rotate(12) scale(1.00)"/>
+    <use href="#microscope" transform="translate(140.4 164.0) rotate(-107) scale(1.18)"/>
+    <use href="#clock" transform="translate(173.5 55.9) rotate(-173) scale(0.72)"/>
+    <use href="#rocket" transform="translate(412.2 521.4) rotate(53) scale(0.87)"/>
+    <use href="#diploma" transform="translate(485.2 93.6) rotate(-36) scale(0.92)"/>
+    <use href="#diploma" transform="translate(39.4 572.2) rotate(88) scale(0.86)"/>
+    <use href="#heart" transform="translate(401.4 686.2) rotate(104) scale(0.61)"/>
+    <use href="#compass" transform="translate(709.6 80.0) rotate(105) scale(1.17)"/>
+    <use href="#compass" transform="translate(-10.4 80.0) rotate(105) scale(1.17)"/>
+    <use href="#bus" transform="translate(575.6 109.2) rotate(81) scale(1.11)"/>
+    <use href="#cap" transform="translate(525.6 550.2) rotate(-130) scale(1.17)"/>
+    <use href="#magnifier" transform="translate(202.1 499.2) rotate(175) scale(0.58)"/>
+    <use href="#cap" transform="translate(253.5 332.8) rotate(-112) scale(1.14)"/>
+    <use href="#globe" transform="translate(4.5 421.5) rotate(-88) scale(0.87)"/>
+    <use href="#globe" transform="translate(724.5 421.5) rotate(-88) scale(0.87)"/>
+    <use href="#backpack" transform="translate(187.2 597.2) rotate(-118) scale(0.90)"/>
+    <use href="#clock" transform="translate(600.5 656.2) rotate(-58) scale(0.72)"/>
+    <use href="#beaker" transform="translate(224.6 570.8) rotate(-179) scale(1.14)"/>
+    <use href="#backpack" transform="translate(275.4 433.3) rotate(-120) scale(0.95)"/>
+    <use href="#castle" transform="translate(296.0 84.6) rotate(166) scale(0.83)"/>
+    <use href="#planet" transform="translate(324.8 244.0) rotate(9) scale(0.73)"/>
+    <use href="#castle" transform="translate(45.5 425.3) rotate(175) scale(0.94)"/>
+    <use href="#castle" transform="translate(44.3 316.8) rotate(-37) scale(0.99)"/>
+    <use href="#beaker" transform="translate(338.5 39.3) rotate(127) scale(1.09)"/>
+    <use href="#star" transform="translate(464.4 344.9) rotate(-150) scale(0.66)"/>
+    <use href="#pencil" transform="translate(610.9 205.6) rotate(-40) scale(1.11)"/>
+    <use href="#beaker" transform="translate(596.7 282.3) rotate(-134) scale(1.02)"/>
+    <use href="#apple" transform="translate(120.7 18.8) rotate(-111) scale(1.02)"/>
+    <use href="#apple" transform="translate(120.7 738.8) rotate(-111) scale(1.02)"/>
+    <use href="#music" transform="translate(147.5 494.7) rotate(-128) scale(0.57)"/>
+    <use href="#ruler" transform="translate(566.2 691.1) rotate(-180) scale(0.95)"/>
+    <use href="#bus" transform="translate(146.2 719.1) rotate(153) scale(1.09)"/>
+    <use href="#bus" transform="translate(146.2 -0.9) rotate(153) scale(1.09)"/>
+    <use href="#calculator" transform="translate(369.8 496.9) rotate(-55) scale(1.08)"/>
+    <use href="#magnifier" transform="translate(50.2 654.9) rotate(76) scale(0.57)"/>
+    <use href="#flower" transform="translate(696.8 520.5) rotate(118) scale(1.09)"/>
+    <use href="#flower" transform="translate(-23.2 520.5) rotate(118) scale(1.09)"/>
+    <use href="#compass" transform="translate(280.6 10.1) rotate(-8) scale(1.22)"/>
+    <use href="#compass" transform="translate(280.6 730.1) rotate(-8) scale(1.22)"/>
+    <use href="#calculator" transform="translate(561.0 210.0) rotate(107) scale(1.11)"/>
+    <use href="#magnifier" transform="translate(253.8 37.6) rotate(-90) scale(0.66)"/>
+    <use href="#bird" transform="translate(69.0 485.4) rotate(158) scale(0.95)"/>
+    <use href="#castle" transform="translate(467.3 245.2) rotate(-71) scale(0.97)"/>
+    <use href="#microscope" transform="translate(169.6 667.7) rotate(-67) scale(0.89)"/>
+    <use href="#music" transform="translate(363.4 200.8) rotate(-14) scale(0.57)"/>
+    <use href="#owl" transform="translate(267.2 211.9) rotate(30) scale(1.20)"/>
+    <use href="#scissors" transform="translate(42.0 530.1) rotate(21) scale(1.08)"/>
+    <use href="#rocket" transform="translate(36.4 467.6) rotate(-33) scale(0.84)"/>
+    <use href="#magnifier" transform="translate(315.5 373.3) rotate(93) scale(0.63)"/>
+    <use href="#flower" transform="translate(690.3 208.4) rotate(151) scale(1.18)"/>
+    <use href="#paperplane" transform="translate(210.0 155.3) rotate(-64) scale(1.17)"/>
+    <use href="#bus" transform="translate(78.7 24.6) rotate(36) scale(0.87)"/>
+    <use href="#bus" transform="translate(78.7 744.6) rotate(36) scale(0.87)"/>
+    <use href="#clock" transform="translate(558.2 55.3) rotate(161) scale(0.63)"/>
+    <use href="#calculator" transform="translate(367.0 583.0) rotate(42) scale(0.84)"/>
+    <use href="#bus" transform="translate(695.1 386.2) rotate(-5) scale(0.99)"/>
+    <use href="#bus" transform="translate(-24.9 386.2) rotate(-5) scale(0.99)"/>
+    <use href="#trophy" transform="translate(177.0 467.2) rotate(22) scale(0.91)"/>
+    <use href="#music" transform="translate(202.4 651.1) rotate(22) scale(0.67)"/>
+    <use href="#rocket" transform="translate(513.5 87.7) rotate(-119) scale(1.06)"/>
+    <use href="#bulb" transform="translate(41.6 126.6) rotate(-108) scale(0.86)"/>
+    <use href="#bulb" transform="translate(20.8 612.3) rotate(108) scale(1.20)"/>
+    <use href="#bulb" transform="translate(740.8 612.3) rotate(108) scale(1.20)"/>
+    <use href="#planet" transform="translate(480.9 665.3) rotate(-117) scale(0.64)"/>
+    <use href="#microscope" transform="translate(86.1 300.1) rotate(33) scale(1.18)"/>
+    <use href="#compass" transform="translate(155.8 584.9) rotate(-102) scale(0.99)"/>
+    <use href="#bulb" transform="translate(224.8 410.0) rotate(62) scale(0.88)"/>
+    <use href="#cloud" transform="translate(142.3 448.2) rotate(-49) scale(0.58)"/>
+    <use href="#bird" transform="translate(444.3 137.2) rotate(57) scale(0.98)"/>
+    <use href="#bird" transform="translate(440.9 397.6) rotate(78) scale(0.91)"/>
+    <use href="#notebook" transform="translate(155.3 123.6) rotate(131) scale(0.88)"/>
+    <use href="#star" transform="translate(548.9 464.1) rotate(82) scale(0.65)"/>
+    <use href="#bulb" transform="translate(370.8 54.3) rotate(67) scale(0.90)"/>
+    <use href="#book" transform="translate(345.2 423.9) rotate(146) scale(0.99)"/>
+    <use href="#trophy" transform="translate(604.2 625.0) rotate(-38) scale(0.97)"/>
+    <use href="#star" transform="translate(528.0 335.7) rotate(-103) scale(0.66)"/>
+    <use href="#apple" transform="translate(378.6 372.0) rotate(-23) scale(0.98)"/>
+    <use href="#puzzle" transform="translate(529.0 703.4) rotate(-101) scale(1.14)"/>
+    <use href="#puzzle" transform="translate(529.0 -16.6) rotate(-101) scale(1.14)"/>
+    <use href="#bulb" transform="translate(49.6 96.3) rotate(-138) scale(0.97)"/>
+    <use href="#star" transform="translate(518.6 139.7) rotate(-1) scale(0.67)"/>
+    <use href="#calculator" transform="translate(104.8 224.9) rotate(-69) scale(1.10)"/>
+    <use href="#ruler" transform="translate(569.6 584.5) rotate(-136) scale(1.16)"/>
+    <use href="#globe" transform="translate(318.1 152.1) rotate(-58) scale(1.22)"/>
+    <use href="#star" transform="translate(262.0 597.8) rotate(87) scale(0.60)"/>
+    <use href="#castle" transform="translate(694.5 665.5) rotate(-76) scale(0.91)"/>
+    <use href="#castle" transform="translate(-25.5 665.5) rotate(-76) scale(0.91)"/>
+    <use href="#bird" transform="translate(79.0 333.3) rotate(75) scale(1.08)"/>
+    <use href="#flower" transform="translate(2.6 47.1) rotate(-139) scale(1.09)"/>
+    <use href="#flower" transform="translate(722.6 47.1) rotate(-139) scale(1.09)"/>
+    <use href="#music" transform="translate(547.9 163.2) rotate(-116) scale(0.54)"/>
+    <use href="#bulb" transform="translate(664.1 512.2) rotate(-85) scale(0.85)"/>
+    <use href="#beaker" transform="translate(282.3 532.2) rotate(-130) scale(1.04)"/>
+    <use href="#microscope" transform="translate(488.7 577.6) rotate(-175) scale(0.98)"/>
+    <use href="#cloud" transform="translate(445.9 642.2) rotate(99) scale(0.56)"/>
+    <use href="#ruler" transform="translate(544.9 370.9) rotate(110) scale(1.01)"/>
+    <use href="#owl" transform="translate(641.1 384.7) rotate(153) scale(0.83)"/>
+    <use href="#notebook" transform="translate(515.4 417.5) rotate(159) scale(0.85)"/>
+    <use href="#planet" transform="translate(570.7 255.7) rotate(64) scale(0.56)"/>
+    <use href="#atom" transform="translate(149.1 407.2) rotate(-17) scale(0.89)"/>
+    <use href="#microscope" transform="translate(345.7 268.3) rotate(172) scale(1.02)"/>
+    <use href="#puzzle" transform="translate(614.6 582.8) rotate(120) scale(1.01)"/>
+    <use href="#magnifier" transform="translate(583.8 73.6) rotate(151) scale(0.66)"/>
+    <use href="#notebook" transform="translate(374.9 23.5) rotate(-156) scale(1.16)"/>
+    <use href="#notebook" transform="translate(374.9 743.5) rotate(-156) scale(1.16)"/>
+    <use href="#book" transform="translate(520.8 388.6) rotate(-133) scale(0.96)"/>
+    <use href="#scissors" transform="translate(349.8 117.4) rotate(-162) scale(1.03)"/>
+    <use href="#star" transform="translate(558.1 408.0) rotate(-73) scale(0.53)"/>
+    <use href="#apple" transform="translate(386.2 314.2) rotate(-29) scale(1.05)"/>
+    <use href="#notebook" transform="translate(211.3 255.3) rotate(158) scale(0.91)"/>
+    <use href="#apple" transform="translate(401.6 188.0) rotate(117) scale(0.97)"/>
+    <use href="#star" transform="translate(425.0 314.4) rotate(100) scale(0.55)"/>
+    <use href="#rocket" transform="translate(463.7 201.7) rotate(-90) scale(0.84)"/>
+    <use href="#apple" transform="translate(411.3 45.1) rotate(20) scale(1.13)"/>
+    <use href="#book" transform="translate(495.2 10.9) rotate(60) scale(1.04)"/>
+    <use href="#book" transform="translate(495.2 730.9) rotate(60) scale(1.04)"/>
+    <use href="#magnifier" transform="translate(88.5 458.9) rotate(-89) scale(0.70)"/>
+    <use href="#calculator" transform="translate(286.5 44.7) rotate(-35) scale(1.08)"/>
+    <use href="#notebook" transform="translate(8.8 494.7) rotate(-58) scale(0.82)"/>
+    <use href="#notebook" transform="translate(728.8 494.7) rotate(-58) scale(0.82)"/>
+    <use href="#paperplane" transform="translate(13.9 522.6) rotate(113) scale(1.16)"/>
+    <use href="#paperplane" transform="translate(733.9 522.6) rotate(113) scale(1.16)"/>
+    <use href="#cloud" transform="translate(109.4 429.3) rotate(-89) scale(0.67)"/>
+    <use href="#castle" transform="translate(658.0 608.5) rotate(122) scale(1.11)"/>
+    <use href="#calculator" transform="translate(528.1 34.7) rotate(124) scale(1.21)"/>
+    <use href="#calculator" transform="translate(274.0 564.6) rotate(-86) scale(0.85)"/>
+    <use href="#clock" transform="translate(470.9 51.2) rotate(96) scale(0.71)"/>
+    <use href="#beaker" transform="translate(507.3 264.9) rotate(-80) scale(0.99)"/>
+    <use href="#paperplane" transform="translate(42.8 57.3) rotate(-146) scale(0.86)"/>
+    <use href="#rocket" transform="translate(61.4 186.6) rotate(-161) scale(1.17)"/>
+    <use href="#clock" transform="translate(707.6 586.0) rotate(64) scale(0.75)"/>
+    <use href="#clock" transform="translate(-12.4 586.0) rotate(64) scale(0.75)"/>
+    <use href="#atom" transform="translate(315.8 104.9) rotate(60) scale(0.87)"/>
+    <use href="#atom" transform="translate(88.1 167.9) rotate(43) scale(1.21)"/>
+    <use href="#trophy" transform="translate(653.9 116.2) rotate(-123) scale(1.10)"/>
+    <use href="#music" transform="translate(673.7 400.9) rotate(94) scale(0.61)"/>
+    <use href="#diploma" transform="translate(602.7 348.7) rotate(-108) scale(1.17)"/>
+    <use href="#puzzle" transform="translate(247.0 553.0) rotate(79) scale(0.99)"/>
+    <use href="#beaker" transform="translate(691.6 7.5) rotate(-114) scale(0.96)"/>
+    <use href="#beaker" transform="translate(691.6 727.5) rotate(-114) scale(0.96)"/>
+    <use href="#heart" transform="translate(149.9 46.7) rotate(-56) scale(0.65)"/>
+    <use href="#castle" transform="translate(430.0 93.3) rotate(-95) scale(0.93)"/>
+    <use href="#ruler" transform="translate(30.9 400.9) rotate(34) scale(1.19)"/>
+    <use href="#flower" transform="translate(619.9 420.2) rotate(23) scale(1.02)"/>
+    <use href="#clock" transform="translate(206.8 206.3) rotate(-178) scale(0.67)"/>
+    <use href="#ruler" transform="translate(614.0 145.1) rotate(-177) scale(0.90)"/>
+    <use href="#bus" transform="translate(421.1 546.1) rotate(54) scale(1.18)"/>
+    <use href="#cap" transform="translate(688.2 295.4) rotate(-36) scale(1.20)"/>
+    <use href="#star" transform="translate(670.8 640.0) rotate(-50) scale(0.70)"/>
+    <use href="#rocket" transform="translate(421.3 471.2) rotate(122) scale(1.07)"/>
+    <use href="#puzzle" transform="translate(665.9 714.1) rotate(-88) scale(0.92)"/>
+    <use href="#puzzle" transform="translate(665.9 -5.9) rotate(-88) scale(0.92)"/>
+    <use href="#rocket" transform="translate(248.1 144.0) rotate(-129) scale(0.87)"/>
+    <use href="#cloud" transform="translate(644.3 291.5) rotate(91) scale(0.78)"/>
+    <use href="#paperplane" transform="translate(165.9 340.9) rotate(32) scale(0.91)"/>
+    <use href="#apple" transform="translate(127.0 257.8) rotate(160) scale(1.02)"/>
+    <use href="#trophy" transform="translate(306.1 610.3) rotate(29) scale(0.82)"/>
+    <use href="#magnifier" transform="translate(288.2 158.8) rotate(32) scale(0.58)"/>
+    <use href="#owl" transform="translate(674.6 67.4) rotate(-6) scale(1.07)"/>
+    <use href="#calculator" transform="translate(342.2 324.3) rotate(-99) scale(1.11)"/>
+    <use href="#beaker" transform="translate(678.0 344.2) rotate(118) scale(1.15)"/>
+    <use href="#heart" transform="translate(454.3 436.2) rotate(138) scale(0.61)"/>
+    <use href="#notebook" transform="translate(591.2 133.2) rotate(71) scale(1.15)"/>
+    <use href="#calculator" transform="translate(685.1 557.0) rotate(-174) scale(1.06)"/>
+    <use href="#ruler" transform="translate(219.6 229.6) rotate(50) scale(1.13)"/>
+    <use href="#star" transform="translate(379.7 555.1) rotate(-144) scale(0.55)"/>
+    <use href="#bulb" transform="translate(264.0 121.8) rotate(-54) scale(1.17)"/>
+    <use href="#bus" transform="translate(605.1 471.0) rotate(-99) scale(1.19)"/>
+    <use href="#book" transform="translate(387.0 436.5) rotate(119) scale(1.18)"/>
+    <use href="#clock" transform="translate(255.1 381.8) rotate(122) scale(0.64)"/>
+    <use href="#rocket" transform="translate(706.2 331.1) rotate(24) scale(0.93)"/>
+    <use href="#rocket" transform="translate(-13.8 331.1) rotate(24) scale(0.93)"/>
+    <use href="#pencil" transform="translate(304.1 494.8) rotate(62) scale(0.90)"/>
+    <use href="#bird" transform="translate(193.5 398.1) rotate(-103) scale(1.09)"/>
+    <use href="#clock" transform="translate(591.7 539.4) rotate(72) scale(0.56)"/>
+    <use href="#calculator" transform="translate(715.7 236.7) rotate(-122) scale(0.84)"/>
+    <use href="#calculator" transform="translate(-4.3 236.7) rotate(-122) scale(0.84)"/>
+    <use href="#ruler" transform="translate(580.6 430.2) rotate(39) scale(1.00)"/>
+    <use href="#bus" transform="translate(398.1 353.1) rotate(178) scale(1.19)"/>
+    <use href="#music" transform="translate(538.5 267.6) rotate(-150) scale(0.73)"/>
+    <use href="#bus" transform="translate(14.0 693.0) rotate(-18) scale(1.10)"/>
+    <use href="#bus" transform="translate(14.0 -27.0) rotate(-18) scale(1.10)"/>
+    <use href="#bus" transform="translate(734.0 693.0) rotate(-18) scale(1.10)"/>
+    <use href="#bus" transform="translate(734.0 -27.0) rotate(-18) scale(1.10)"/>
+    <use href="#cap" transform="translate(475.1 310.9) rotate(96) scale(0.93)"/>
+    <use href="#trophy" transform="translate(434.2 200.9) rotate(-126) scale(1.02)"/>
+    <use href="#star" transform="translate(683.3 149.6) rotate(-155) scale(0.61)"/>
+  </g>
+</svg>
