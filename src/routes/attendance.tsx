@@ -1,6 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { AlertTriangle, CheckCircle2, Clock3, ClipboardList, Loader2, LogOut, UserX, Users, X } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock3,
+  ClipboardList,
+  Loader2,
+  LogOut,
+  UserX,
+  Users,
+  X,
+} from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -244,7 +254,13 @@ function AttendancePage() {
             return (
               <div key={student.id} className="flex flex-wrap items-center gap-3 p-4">
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium">{student.name}</p>
+                  <Link
+                    to="/students/$studentCode"
+                    params={{ studentCode: student.id }}
+                    className="font-medium hover:text-primary hover:underline"
+                  >
+                    {student.name}
+                  </Link>
                   <p className="text-xs text-muted-foreground">
                     {student.id} · {student.cls}
                   </p>
