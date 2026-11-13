@@ -33,10 +33,10 @@ export function BackgroundMusic({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     void supabase.auth
-      .getUser()
+      .getSession()
       .then(({ data }) => {
-        if (!active || !data.user) return;
-        const key = userKey(data.user.id);
+        if (!active || !data.session?.user) return;
+        const key = userKey(data.session.user.id);
         setStorageKey(key);
         setEnabledState(readEnabled(key));
       })
