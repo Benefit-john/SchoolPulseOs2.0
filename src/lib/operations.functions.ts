@@ -105,18 +105,43 @@ export const recordAttendance = createServerFn({ method: "POST" })
     const message = `${student.full_name} ${label}${data.gate ? ` at ${data.gate}` : ""}`;
     const tone = data.status === "absent" ? "warning" : "info";
 
+    const recordedOn = getSchoolLocalDate(new Date(), timeZone);
     const { error: rpcError } = await admin.rpc("record_attendance_v1", {
       p_school_id: data.schoolId,
       p_student_id: student.id,
       p_status: data.status,
       p_recorded_by: context.userId,
       p_gate: data.gate ?? null,
-      p_recorded_on: getSchoolLocalDate(new Date(), timeZone),
+      p_recorded_on: recordedOn,
       p_event_type: data.eventType,
       p_message: message,
       p_tone: tone,
     });
-    if (rpcError) throw new Error(rpcError.message);
+    if (rpcError) {
+      if (rpcError.code === "PGRST202" || rpcError.message?.includes("record_attendance_v1")) {
+        const { error: upsertError } = await admin.from("attendance_records").upsert(
+          {
+            school_id: data.schoolId,
+            student_id: student.id,
+            status: data.status,
+            recorded_by: context.userId,
+            gate: data.gate ?? null,
+            recorded_on: recordedOn,
+          },
+          { onConflict: "school_id,student_id,recorded_on" },
+        );
+        if (upsertError) throw new Error(upsertError.message);
+        await admin.from("activity_events").insert({
+          school_id: data.schoolId,
+          actor_id: context.userId,
+          event_type: data.eventType,
+          message,
+          tone,
+        });
+      } else {
+        throw new Error(rpcError.message);
+      }
+    }
 
     const { data: prefs } = await admin
       .from("notification_preferences")
@@ -229,7 +254,31 @@ export const recordBulkAttendance = createServerFn({ method: "POST" })
       p_message: message,
       p_tone: tone,
     });
-    if (rpcError) throw new Error(rpcError.message);
+    if (rpcError) {
+      if (rpcError.code === "PGRST202" || rpcError.message?.includes("record_bulk_attendance_v1")) {
+        const rows = studentIds.map((id: string) => ({
+          school_id: data.schoolId,
+          student_id: id,
+          status: data.status,
+          recorded_by: context.userId,
+          gate: data.gate ?? null,
+          recorded_on: today,
+        }));
+        const { error: upsertError } = await admin
+          .from("attendance_records")
+          .upsert(rows, { onConflict: "school_id,student_id,recorded_on" });
+        if (upsertError) throw new Error(upsertError.message);
+        await admin.from("activity_events").insert({
+          school_id: data.schoolId,
+          actor_id: context.userId,
+          event_type: "bulk-attendance-update",
+          message,
+          tone,
+        });
+      } else {
+        throw new Error(rpcError.message);
+      }
+    }
 
     return { ok: true as const, count };
   });
