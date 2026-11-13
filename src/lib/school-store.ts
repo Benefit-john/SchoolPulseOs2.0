@@ -1,5 +1,4 @@
-import { createContext, createElement, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
-import { useServerFn } from "@tanstack/react-start";
+import { createContext, createElement, useContext, useSyncExternalStore, type ReactNode } from "react";
 import { toast } from "sonner";
 import { recordAttendance } from "@/lib/operations.functions";
 import { getSchoolLocalDate } from "@/lib/school-date";
@@ -220,24 +219,41 @@ type CoreData = {
 
 function createSchoolStore() {
   let state: SchoolState = { ...emptyState };
+  let currentSnapshot: StoreSnapshot | null = null;
   const listeners = new Set<() => void>();
   let loadGeneration = 0;
   let coreData: CoreData | null = null;
-  let recordAttendanceFn: ((args: { data: any }) => Promise<any>) | null = async (args) => {
-    return (recordAttendance as any)(args);
-  };
 
   function emit() {
     listeners.forEach((fn) => fn());
   }
 
+  function buildSnapshot(): StoreSnapshot {
+    return {
+      state,
+      stats: computeStats(state.students),
+      loading: state.loading,
+      refresh: load,
+      changeWorkspace,
+      addStudent,
+      setAttendance,
+      scanStudent,
+      registerVisitor,
+      checkoutVisitor,
+      addStaff,
+      updateNotificationSettings,
+    };
+  }
+
   function setState(next: SchoolState) {
     state = next;
+    currentSnapshot = buildSnapshot();
     emit();
   }
 
   function patchState(patch: Partial<SchoolState>) {
     state = { ...state, ...patch };
+    currentSnapshot = buildSnapshot();
     emit();
   }
 
@@ -249,21 +265,10 @@ function createSchoolStore() {
   }
 
   function getSnapshot(): StoreSnapshot {
-    const currentState = state;
-    return {
-      state: currentState,
-      stats: computeStats(currentState.students),
-      loading: currentState.loading,
-      refresh: load,
-      changeWorkspace,
-      addStudent,
-      setAttendance,
-      scanStudent,
-      registerVisitor,
-      checkoutVisitor,
-      addStaff,
-      updateNotificationSettings,
-    };
+    if (!currentSnapshot) {
+      currentSnapshot = buildSnapshot();
+    }
+    return currentSnapshot;
   }
 
   function getSchoolId() {
@@ -771,9 +776,7 @@ function createSchoolStore() {
             : "checked_out";
 
     try {
-      const fn = recordAttendanceFn;
-      if (!fn) throw new Error("Store not initialized with server function");
-      await fn({
+      await (recordAttendance as any)({
         data: {
           schoolId,
           studentCode,
@@ -936,36 +939,49 @@ function createSchoolStore() {
   }
 
   function init() {
+    if (typeof window === "undefined") return;
     const reload = () => {
       setState({ ...emptyState, loading: true, error: null });
       void load();
     };
     void load();
 
-    if (typeof window !== "undefined") {
-      window.addEventListener(ACTIVE_WORKSPACE_CHANGED, reload);
-      window.addEventListener("storage", (event: StorageEvent) => {
-        if (event.key === ACTIVE_WORKSPACE_KEY) {
-          reload();
-        }
-      });
-    }
-  }
-
-  function setRecordAttendanceFn(fn: (args: { data: any }) => Promise<any>) {
-    recordAttendanceFn = fn;
+    window.addEventListener(ACTIVE_WORKSPACE_CHANGED, reload);
+    window.addEventListener("storage", (event: StorageEvent) => {
+      if (event.key === ACTIVE_WORKSPACE_KEY) {
+        reload();
+      }
+    });
   }
 
   return {
     subscribe,
     getSnapshot,
     init,
-    setRecordAttendanceFn,
   };
 }
 
 const store = createSchoolStore();
 store.init();
+
+const serverSnapshot: StoreSnapshot = {
+  state: emptyState,
+  stats: computeStats(emptyState.students),
+  loading: true,
+  refresh: async () => {},
+  changeWorkspace: () => {},
+  addStudent: async () => ({ registrationCode: "", expiresAt: "" }),
+  setAttendance: async () => {},
+  scanStudent: async () => {},
+  registerVisitor: async () => {},
+  checkoutVisitor: async () => {},
+  addStaff: async () => {},
+  updateNotificationSettings: async () => {},
+};
+
+function getServerSnapshot(): StoreSnapshot {
+  return serverSnapshot;
+}
 
 const SchoolStoreContext = createContext<typeof store>(store);
 
@@ -975,12 +991,5 @@ export function SchoolStoreProvider({ children }: { children: ReactNode }) {
 
 export function useSchoolStore(): StoreSnapshot {
   const ctx = useContext(SchoolStoreContext);
-  const snapshot = useSyncExternalStore(ctx.subscribe, ctx.getSnapshot, ctx.getSnapshot);
-  const recordAttendanceServer = useServerFn(recordAttendance);
-
-  useMemo(() => {
-    ctx.setRecordAttendanceFn(recordAttendanceServer);
-  }, [ctx, recordAttendanceServer]);
-
-  return snapshot;
+  return useSyncExternalStore(ctx.subscribe, ctx.getSnapshot, getServerSnapshot);
 }
