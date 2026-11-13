@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { BackgroundMusic } from "../components/background-music";
 import { ThemeProvider } from "../components/theme-provider";
+import { Toaster } from "../components/ui/sonner";
+import { SchoolStoreProvider } from "../lib/school-store";
 
 function NotFoundComponent() {
   return (
@@ -133,9 +135,12 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <BackgroundMusic>
-          <Outlet />
-        </BackgroundMusic>
+        <SchoolStoreProvider>
+          <BackgroundMusic>
+            <Outlet />
+          </BackgroundMusic>
+          <Toaster />
+        </SchoolStoreProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

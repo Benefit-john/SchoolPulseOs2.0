@@ -1,4 +1,5 @@
 import { createContext, createElement, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { recordAttendance } from "@/lib/operations.functions";
 import { getSchoolLocalDate } from "@/lib/school-date";
@@ -222,7 +223,9 @@ function createSchoolStore() {
   const listeners = new Set<() => void>();
   let loadGeneration = 0;
   let coreData: CoreData | null = null;
-  let recordAttendanceFn: ((args: { data: any }) => Promise<any>) | null = null;
+  let recordAttendanceFn: ((args: { data: any }) => Promise<any>) | null = async (args) => {
+    return (recordAttendance as any)(args);
+  };
 
   function emit() {
     listeners.forEach((fn) => fn());
@@ -973,14 +976,10 @@ export function SchoolStoreProvider({ children }: { children: ReactNode }) {
 export function useSchoolStore(): StoreSnapshot {
   const ctx = useContext(SchoolStoreContext);
   const snapshot = useSyncExternalStore(ctx.subscribe, ctx.getSnapshot, ctx.getSnapshot);
-  const recordAttendanceServer = (recordAttendance as any).__serverFn
-    ? recordAttendance
-    : recordAttendance;
+  const recordAttendanceServer = useServerFn(recordAttendance);
 
   useMemo(() => {
-    ctx.setRecordAttendanceFn(async (args: { data: any }) => {
-      return (recordAttendanceServer as any)({ data: args.data });
-    });
+    ctx.setRecordAttendanceFn(recordAttendanceServer);
   }, [ctx, recordAttendanceServer]);
 
   return snapshot;

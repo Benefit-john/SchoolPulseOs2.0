@@ -17,6 +17,20 @@ export function getCachedRoles(): AppRole[] {
   return cachedRoles ?? [];
 }
 
+export async function getUserRoles(): Promise<AppRole[]> {
+  const { data: sessionResult } = await supabase.auth.getSession();
+  const user = sessionResult.session?.user;
+  if (!user) return [];
+  if (cachedUserId === user.id && cachedRoles) return cachedRoles;
+  const { data: roles } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id);
+  cachedUserId = user.id;
+  cachedRoles = (roles ?? []).map((row) => row.role as AppRole);
+  return cachedRoles;
+}
+
 export async function requireRoles(allowed: AppRole[]) {
   const { data: sessionResult } = await supabase.auth.getSession();
   const user = sessionResult.session?.user;
