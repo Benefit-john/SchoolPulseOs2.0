@@ -18,9 +18,8 @@ export function getCachedRoles(): AppRole[] {
 }
 
 export async function getUserRoles(): Promise<AppRole[]> {
-  if (cachedRoles) return cachedRoles;
-  const { data: userResult } = await supabase.auth.getUser();
-  const user = userResult.user;
+  const { data: sessionResult } = await supabase.auth.getSession();
+  const user = sessionResult.session?.user;
   if (!user) return [];
   if (cachedUserId === user.id && cachedRoles) return cachedRoles;
   const { data: roles } = await supabase
@@ -33,8 +32,8 @@ export async function getUserRoles(): Promise<AppRole[]> {
 }
 
 export async function requireRoles(allowed: AppRole[]) {
-  const { data: userResult } = await supabase.auth.getUser();
-  const user = userResult.user;
+  const { data: sessionResult } = await supabase.auth.getSession();
+  const user = sessionResult.session?.user;
   if (!user) throw redirect({ to: "/sign-in" });
 
   if (cachedUserId === user.id && cachedRoles) {

@@ -68,7 +68,7 @@ async function sendSms(to: string, body: string): Promise<DeliveryResult> {
 
 export const recordAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((value) => input.parse(value))
+  .inputValidator((value) => input.parse(value))
   .handler(async ({ data, context }) => {
     const workspace = context.supabase as any;
     const { data: member } = await workspace
@@ -184,7 +184,7 @@ const bulkInput = z.object({
 
 export const recordBulkAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((value) => bulkInput.parse(value))
+  .inputValidator((value) => bulkInput.parse(value))
   .handler(async ({ data, context }) => {
     const workspace = context.supabase as any;
     const { data: membership } = await workspace
@@ -240,7 +240,7 @@ const feeReminderInput = z.object({
 });
 export const sendFeeDueReminders = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((value) => feeReminderInput.parse(value))
+  .inputValidator((value) => feeReminderInput.parse(value))
   .handler(async ({ data, context }) => {
     const workspace = context.supabase as any;
     const { data: membership } = await workspace
@@ -338,7 +338,7 @@ const schoolBrandingInput = z
 
 export const updateSchoolBranding = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((value) => schoolBrandingInput.parse(value))
+  .inputValidator((value) => schoolBrandingInput.parse(value))
   .handler(async ({ data, context }) => {
     const { data: membership, error: membershipError } = await context.supabase
       .from("school_memberships")
