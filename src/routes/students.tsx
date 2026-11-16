@@ -1,13 +1,13 @@
 import { createFileRoute, Outlet, useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { requireRoles } from "@/lib/route-guards";
-import { Pencil, Plus, Search, UserPlus, X } from "lucide-react";
+import { Plus, Search, UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatNaira } from "@/lib/format";
-import { useSchoolStore, type AttendanceStatus, type Student } from "@/lib/school-store";
+import { useSchoolStore, type AttendanceStatus } from "@/lib/school-store";
 import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/students")({
   ssr: false,
@@ -22,13 +22,12 @@ const tone: Record<AttendanceStatus, string> = {
   Unmarked: "border-border border-dashed text-muted-foreground",
 };
 function StudentsPage() {
-  const { state, addStudent, updateStudent } = useSchoolStore();
+  const { state, addStudent } = useSchoolStore();
   const navigate = useNavigate();
   const matchRoute = useMatchRoute();
   const studentProfile = matchRoute({ to: "/students/$studentCode", fuzzy: false });
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
-  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [error, setError] = useState("");
   const [codeNotice, setCodeNotice] = useState("");
   const [canManage, setCanManage] = useState(false);
@@ -36,23 +35,17 @@ function StudentsPage() {
     let active = true;
     void (async () => {
       const { data: user } = await supabase.auth.getUser();
-      const schoolId = state.school?.id;
-      if (!user.user || !schoolId) {
-        if (active) setCanManage(false);
-        return;
-      }
-      const { data: membership } = await supabase
-        .from("school_memberships")
+      if (!user.user) return;
+      const { data: roles } = await supabase
+        .from("user_roles")
         .select("role")
-        .eq("user_id", user.user.id)
-        .eq("school_id", schoolId)
-        .maybeSingle();
-      if (active) setCanManage(membership?.role === "admin");
+        .eq("user_id", user.user.id);
+      if (active) setCanManage((roles ?? []).some((row) => row.role === "admin"));
     })();
     return () => {
       active = false;
     };
-  }, [state.school?.id]);
+  }, []);
   const filtered = useMemo(
     () =>
       state.students.filter((s) =>
@@ -60,29 +53,22 @@ function StudentsPage() {
       ),
     [state.students, q],
   );
-  const saveStudent = async (e: React.FormEvent<HTMLFormElement>) => {
+  const add = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     const f = new FormData(e.currentTarget);
     try {
-      const input = {
+      const result = await addStudent({
         name: String(f.get("name")),
         id: String(f.get("id")),
         cls: String(f.get("cls")),
         guardian: String(f.get("guardian")),
         guardianEmail: String(f.get("guardianEmail") || ""),
         guardianPhone: String(f.get("guardianPhone") || ""),
-      };
-      if (editingStudent) {
-        await updateStudent({ ...input, studentDbId: editingStudent.dbId });
-        setCodeNotice(`${input.name}'s details were updated.`);
-      } else {
-        const result = await addStudent(input);
-        setCodeNotice(
-          `Registration code: ${result.registrationCode}. Valid until ${new Date(result.expiresAt).toLocaleString()}. Share it privately with the family.`,
-        );
-      }
-      setEditingStudent(null);
+      });
+      setCodeNotice(
+        `Registration code: ${result.registrationCode}. Valid until ${new Date(result.expiresAt).toLocaleString()}. Share it privately with the family.`,
+      );
       setOpen(false);
       e.currentTarget.reset();
     } catch (err) {
@@ -98,15 +84,7 @@ function StudentsPage() {
       subtitle={`${state.students.length} active students`}
       actions={
         canManage ? (
-          <Button
-            size="sm"
-            className="gap-2"
-            onClick={() => {
-              setEditingStudent(null);
-              setError("");
-              setOpen(true);
-            }}
-          >
+          <Button size="sm" className="gap-2" onClick={() => setOpen(true)}>
             <Plus className="size-4" /> Add student
           </Button>
         ) : null
@@ -150,7 +128,6 @@ function StudentsPage() {
                   <th className="px-4 py-3">Guardian</th>
                   <th className="px-4 py-3">Today</th>
                   <th className="px-4 py-3 text-right">Balance</th>
-                  {canManage ? <th className="px-4 py-3 text-right">Actions</th> : null}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -187,24 +164,6 @@ function StudentsPage() {
                     >
                       {formatNaira(s.balance)}
                     </td>
-                    {canManage ? (
-                      <td className="px-4 py-3 text-right">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="gap-1.5"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            setEditingStudent(s);
-                            setError("");
-                            setOpen(true);
-                          }}
-                        >
-                          <Pencil className="size-3.5" /> Edit
-                        </Button>
-                      </td>
-                    ) : null}
                   </tr>
                 ))}
               </tbody>
@@ -215,27 +174,17 @@ function StudentsPage() {
       {open ? (
         <div className="fixed inset-0 z-50 grid place-items-center bg-overlay p-4">
           <form
-            key={editingStudent?.dbId ?? "new-student"}
-            onSubmit={saveStudent}
+            onSubmit={add}
             className="hairline-card w-full max-w-lg space-y-4 bg-card p-6 shadow-lift"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-primary">
-                  {editingStudent ? "Student details" : "Student register"}
+                  Student register
                 </p>
-                <h2 className="mt-1 text-xl font-bold">
-                  {editingStudent ? `Edit ${editingStudent.name}` : "Add a student"}
-                </h2>
+                <h2 className="mt-1 text-xl font-bold">Add a student</h2>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingStudent(null);
-                  setOpen(false);
-                }}
-                aria-label="Close"
-              >
+              <button type="button" onClick={() => setOpen(false)} aria-label="Close">
                 <X className="size-5" />
               </button>
             </div>
@@ -253,26 +202,12 @@ function StudentsPage() {
                   required={name !== "guardianEmail" && name !== "guardianPhone"}
                   name={name}
                   placeholder={label}
-                  defaultValue={
-                    name === "name"
-                      ? editingStudent?.name
-                      : name === "id"
-                        ? editingStudent?.id
-                        : name === "cls"
-                          ? editingStudent?.cls
-                          : name === "guardian"
-                            ? editingStudent?.guardian
-                            : name === "guardianEmail"
-                              ? (editingStudent?.guardianEmail ?? "")
-                              : (editingStudent?.guardianPhone ?? "")
-                  }
                 />
               </label>
             ))}
             {error ? <p className="clay-shake text-sm text-danger">{error}</p> : null}
             <Button className="w-full gap-2">
-              {editingStudent ? <Pencil className="size-4" /> : <UserPlus className="size-4" />}
-              {editingStudent ? "Save changes" : "Save student"}
+              <UserPlus className="size-4" /> Save student
             </Button>
           </form>
         </div>

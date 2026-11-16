@@ -121,15 +121,6 @@ type StoreSnapshot = {
     guardianEmail?: string;
     guardianPhone?: string;
   }) => Promise<{ registrationCode: string; expiresAt: string }>;
-  updateStudent: (input: {
-    studentDbId: string;
-    name: string;
-    id: string;
-    cls: string;
-    guardian: string;
-    guardianEmail?: string;
-    guardianPhone?: string;
-  }) => Promise<void>;
   setAttendance: (
     studentCode: string,
     status: RecordedAttendanceStatus,
@@ -244,7 +235,6 @@ function createSchoolStore() {
       refresh: load,
       changeWorkspace,
       addStudent,
-      updateStudent,
       setAttendance,
       scanStudent,
       registerVisitor,
@@ -755,55 +745,6 @@ function createSchoolStore() {
     return { registrationCode, expiresAt: registrationCodeExpiresAt };
   }
 
-  async function updateStudent(input: {
-    studentDbId: string;
-    name: string;
-    id: string;
-    cls: string;
-    guardian: string;
-    guardianEmail?: string;
-    guardianPhone?: string;
-  }) {
-    const schoolId = getSchoolId();
-    if (!schoolId) throw new Error("No school workspace selected");
-    if (!input.studentDbId) throw new Error("Student record is unavailable");
-
-    const { error } = await db()
-      .from("students")
-      .update({
-        full_name: input.name,
-        student_code: input.id,
-        class_name: input.cls,
-        guardian_name: input.guardian,
-        guardian_email: input.guardianEmail || null,
-        guardian_phone: input.guardianPhone || null,
-      })
-      .eq("id", input.studentDbId)
-      .eq("school_id", schoolId);
-    if (error) throw error;
-
-    await recordActivity(`${input.name}'s student profile was updated`, "info");
-    patchState({
-      students: state.students.map((student) =>
-        student.dbId === input.studentDbId
-          ? {
-              ...student,
-              id: input.id,
-              name: input.name,
-              cls: input.cls,
-              guardian: input.guardian,
-              guardianEmail: input.guardianEmail || null,
-              guardianPhone: input.guardianPhone || null,
-            }
-          : student,
-      ),
-    });
-
-    if (coreData) {
-      loadStudents(coreData).catch(() => {});
-    }
-  }
-
   async function setAttendance(
     studentCode: string,
     status: RecordedAttendanceStatus,
@@ -1023,7 +964,6 @@ const serverSnapshot: StoreSnapshot = {
   refresh: async () => {},
   changeWorkspace: () => {},
   addStudent: async () => ({ registrationCode: "", expiresAt: "" }),
-  updateStudent: async () => {},
   setAttendance: async () => {},
   scanStudent: async () => {},
   registerVisitor: async () => {},
