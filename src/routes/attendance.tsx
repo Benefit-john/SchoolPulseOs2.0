@@ -55,17 +55,15 @@ function AttendancePage() {
       : state.students.filter((student) => student.cls === selectedClass);
   const update = useCallback(
     async (id: string, name: string, status: RecordedAttendanceStatus) => {
-      let success = false;
-      let failureMessage: string | null = null;
       setError(null);
       setBusyStudents((prev) => new Map(prev).set(id, status));
       try {
         await setAttendance(id, status);
-        success = true;
+        toast.success(`${name} marked ${status}`);
       } catch (err) {
         const msg = err instanceof Error ? err.message : "Could not update attendance";
         setError(msg);
-        failureMessage = msg;
+        toast.error(msg);
       } finally {
         setBusyStudents((prev) => {
           const next = new Map(prev);
@@ -73,9 +71,6 @@ function AttendancePage() {
           return next;
         });
       }
-      await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
-      if (success) toast.success(`${name} marked ${status}`);
-      if (failureMessage) toast.error(failureMessage);
     },
     [setAttendance],
   );

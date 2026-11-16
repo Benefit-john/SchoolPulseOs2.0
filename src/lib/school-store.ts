@@ -1,4 +1,5 @@
 import { createContext, createElement, useContext, useSyncExternalStore, type ReactNode } from "react";
+import { toast } from "sonner";
 import { recordAttendance } from "@/lib/operations.functions";
 import { getSchoolLocalDate } from "@/lib/school-date";
 import { supabase } from "@/integrations/supabase/client";
@@ -756,12 +757,15 @@ function createSchoolStore() {
 
     const student = state.students.find((s) => s.id === studentCode);
     const previousStatus = student?.status;
+    const studentName = student?.name ?? studentCode;
 
     patchState({
       students: state.students.map((s) =>
         s.id === studentCode ? { ...s, status } : s,
       ),
     });
+    toast.success(`${studentName} marked ${status}`);
+
     const value =
       status === "Present"
         ? "present"
@@ -791,6 +795,9 @@ function createSchoolStore() {
           s.id === studentCode ? { ...s, status: previousStatus ?? "Unmarked" } : s,
         ),
       });
+      toast.error(
+        `Failed to update ${studentName}: ${err instanceof Error ? err.message : "Unknown error"}`,
+      );
       throw err;
     }
   }

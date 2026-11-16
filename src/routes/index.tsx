@@ -105,22 +105,20 @@ function Dashboard() {
         </Button>
       }
     >
-      {attention.length ? (
-        <section className="hairline-card flex min-w-0 flex-wrap items-center gap-4 border-danger/30 bg-danger/5 p-4">
-          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-danger/10 text-danger">
-            <AlertTriangle className="size-5" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold">{attention.length} students need attention</p>
-            <p className="text-sm text-muted-foreground">
-              Late arrivals and confirmed absences for today.
-            </p>
-          </div>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/attendance">Review attendance</Link>
-          </Button>
-        </section>
-      ) : null}
+      <section className="hairline-card flex min-w-0 flex-wrap items-center gap-4 border-danger/30 bg-danger/5 p-4">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-danger/10 text-danger">
+          <AlertTriangle className="size-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold">{attention.length} students need attention</p>
+          <p className="text-sm text-muted-foreground">
+            Late arrivals and confirmed absences for today.
+          </p>
+        </div>
+        <Button asChild variant="outline" size="sm">
+          <Link to="/attendance">Review attendance</Link>
+        </Button>
+      </section>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <KpiCard
           label="Present today"
