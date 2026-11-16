@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Clock3, ClipboardList, Loader2, LogOut, UserX, Users } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { CheckCircle2, Clock3, ClipboardList, LogOut, UserX, Users } from "lucide-react";
+import { useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { KpiCard } from "@/components/kpi-card";
 import { Badge } from "@/components/ui/badge";
@@ -38,12 +37,10 @@ const tone: Record<AttendanceStatus, string> = {
 function AttendancePage() {
   const { state, stats, setAttendance, refresh } = useSchoolStore();
   const bulk = useServerFn(recordBulkAttendance);
+  const [error, setError] = useState("");
   const [selectedClass, setSelectedClass] = useState("all");
   const [bulkStatus, setBulkStatus] = useState<RecordedAttendanceStatus>("Present");
   const [busy, setBusy] = useState(false);
-  const [busyStudents, setBusyStudents] = useState<Map<string, RecordedAttendanceStatus>>(
-    () => new Map(),
-  );
   const classes = useMemo(
     () => Array.from(new Set(state.students.map((student) => student.cls))).sort(),
     [state.students],
@@ -52,27 +49,18 @@ function AttendancePage() {
     selectedClass === "all"
       ? state.students
       : state.students.filter((student) => student.cls === selectedClass);
-  const update = useCallback(
-    async (id: string, name: string, status: RecordedAttendanceStatus) => {
-      setBusyStudents((prev) => new Map(prev).set(id, status));
-      try {
-        await setAttendance(id, status);
-        toast.success(`${name} marked ${status}`);
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Could not update attendance");
-      } finally {
-        setBusyStudents((prev) => {
-          const next = new Map(prev);
-          next.delete(id);
-          return next;
-        });
-      }
-    },
-    [setAttendance],
-  );
+  const update = async (id: string, status: RecordedAttendanceStatus) => {
+    setError("");
+    try {
+      await setAttendance(id, status);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not update attendance");
+    }
+  };
   const markClass = async () => {
     if (!state.school || !visible.length) return;
     setBusy(true);
+    setError("");
     try {
       const result = await bulk({
         data: {
@@ -81,16 +69,16 @@ function AttendancePage() {
           status: apiStatus[bulkStatus],
         },
       });
-      toast.success(`${result.count} students marked ${bulkStatus.toLowerCase()}.`);
+      setError(`${result.count} students marked ${bulkStatus.toLowerCase()}.`);
       await refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not mark the class");
+      setError(err instanceof Error ? err.message : "Could not mark the class");
     } finally {
       setBusy(false);
     }
   };
   return (
-    <AppShell title="Attendance" subtitle="Today's register across all classes">
+    <AppShell title="Attendance" subtitle="Today’s register across all classes">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <KpiCard
           label="Students present"
@@ -169,11 +157,16 @@ function AttendancePage() {
             {busy ? "Saving…" : `Mark ${selectedClass === "all" ? "all students" : selectedClass}`}
           </Button>
         </div>
+        {error ? (
+          <p className="mt-3 text-sm text-muted-foreground" role="status">
+            {error}
+          </p>
+        ) : null}
       </section>
       <section className="hairline-card p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="display-title text-base">Today's attendance picture</h2>
+            <h2 className="display-title text-base">Today’s attendance picture</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Updates are saved to the school workspace and queued for guardian alerts.
             </p>
@@ -206,40 +199,32 @@ function AttendancePage() {
           <h2 className="display-title text-base">Register</h2>
         </div>
         <div className="divide-y divide-border">
-          {visible.map((student) => {
-            const studentBusyStatus = busyStudents.get(student.id);
-            const isStudentBusy = studentBusyStatus !== undefined;
-            return (
-              <div key={student.id} className="flex flex-wrap items-center gap-3 p-4">
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">{student.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {student.id} · {student.cls}
-                  </p>
-                </div>
-                <Badge variant="outline" className={tone[student.status]}>
-                  {student.status}
-                </Badge>
-                <div className="flex flex-wrap gap-1">
-                  {statuses.map((status) => (
-                    <Button
-                      key={status}
-                      size="sm"
-                      variant={student.status === status ? "secondary" : "ghost"}
-                      className="text-xs"
-                      disabled={isStudentBusy}
-                      onClick={() => void update(student.id, student.name, status)}
-                    >
-                      {isStudentBusy && studentBusyStatus === status ? (
-                        <Loader2 className="mr-1 size-3 animate-spin" />
-                      ) : null}
-                      {status}
-                    </Button>
-                  ))}
-                </div>
+          {visible.map((student) => (
+            <div key={student.id} className="flex flex-wrap items-center gap-3 p-4">
+              <div className="min-w-0 flex-1">
+                <p className="font-medium">{student.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {student.id} · {student.cls}
+                </p>
               </div>
-            );
-          })}
+              <Badge variant="outline" className={tone[student.status]}>
+                {student.status}
+              </Badge>
+              <div className="flex flex-wrap gap-1">
+                {statuses.map((status) => (
+                  <Button
+                    key={status}
+                    size="sm"
+                    variant={student.status === status ? "secondary" : "ghost"}
+                    className="text-xs"
+                    onClick={() => void update(student.id, status)}
+                  >
+                    {status}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          ))}
           {!visible.length ? (
             <p className="p-6 text-sm text-muted-foreground">
               No students are assigned to this class yet.
