@@ -79,51 +79,45 @@ export const recordAttendance = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!member || !["admin", "teacher"].includes(member.role))
       throw new Error("Only admins and teachers can record attendance.");
-
+    const timeZone = await getSchoolTimezone(data.schoolId);
     const admin = db();
-
-    const [timeZone, studentResult] = await Promise.all([
-      getSchoolTimezone(data.schoolId),
-      admin
-        .from("students")
-        .select("id,full_name,class_name,guardian_name,guardian_email,guardian_phone")
-        .eq("school_id", data.schoolId)
-        .eq("student_code", data.studentCode)
-        .single() as Promise<{ data: any; error: any }>,
-    ]);
-
-    const student = studentResult.data;
-    if (studentResult.error || !student)
-      throw new Error("Student not found in this school workspace.");
-
+    const { data: student, error: studentError } = await admin
+      .from("students")
+      .select("id,full_name,class_name,guardian_name,guardian_email,guardian_phone")
+      .eq("school_id", data.schoolId)
+      .eq("student_code", data.studentCode)
+      .single();
+    if (studentError || !student) throw new Error("Student not found in this school workspace.");
+    const { error } = await admin.from("attendance_records").upsert(
+      {
+        school_id: data.schoolId,
+        student_id: student.id,
+        status: data.status,
+        recorded_by: context.userId,
+        gate: data.gate ?? null,
+        recorded_on: getSchoolLocalDate(new Date(), timeZone),
+      },
+      { onConflict: "school_id,student_id,recorded_on" },
+    );
+    if (error) throw new Error(error.message);
     const label =
       data.eventType === "check-in"
         ? "checked in"
         : data.eventType === "check-out"
           ? "checked out"
           : `marked ${data.status.replace("_", " ")}`;
-    const message = `${student.full_name} ${label}${data.gate ? ` at ${data.gate}` : ""}`;
-    const tone = data.status === "absent" ? "warning" : "info";
-
-    const { error: rpcError } = await admin.rpc("record_attendance_v1", {
-      p_school_id: data.schoolId,
-      p_student_id: student.id,
-      p_status: data.status,
-      p_recorded_by: context.userId,
-      p_gate: data.gate ?? null,
-      p_recorded_on: getSchoolLocalDate(new Date(), timeZone),
-      p_event_type: data.eventType,
-      p_message: message,
-      p_tone: tone,
+    await admin.from("activity_events").insert({
+      school_id: data.schoolId,
+      actor_id: context.userId,
+      event_type: data.eventType,
+      message: `${student.full_name} ${label}${data.gate ? ` at ${data.gate}` : ""}`,
+      tone: data.status === "absent" ? "warning" : "info",
     });
-    if (rpcError) throw new Error(rpcError.message);
-
     const { data: prefs } = await admin
       .from("notification_preferences")
       .select("check_in_email,check_in_sms,attendance_email,attendance_sms")
       .eq("school_id", data.schoolId)
       .maybeSingle();
-
     const body = `Hello ${student.guardian_name ?? "Guardian"}, ${student.full_name} (${student.class_name ?? "student"}) was ${label} at your school.`;
     const rows: any[] = [];
     if (data.eventType !== "attendance-update" && prefs?.check_in_email && student.guardian_email)
@@ -135,7 +129,6 @@ export const recordAttendance = createServerFn({ method: "POST" })
         recipient: student.guardian_email,
         subject: `School attendance update for ${student.full_name}`,
         body,
-        status: "queued",
       });
     if (data.eventType !== "attendance-update" && prefs?.check_in_sms && student.guardian_phone)
       rows.push({
@@ -145,7 +138,6 @@ export const recordAttendance = createServerFn({ method: "POST" })
         event_type: data.eventType,
         recipient: student.guardian_phone,
         body,
-        status: "queued",
       });
     if (data.eventType === "attendance-update" && prefs?.attendance_email && student.guardian_email)
       rows.push({
@@ -156,7 +148,6 @@ export const recordAttendance = createServerFn({ method: "POST" })
         recipient: student.guardian_email,
         subject: `Attendance update for ${student.full_name}`,
         body,
-        status: "queued",
       });
     if (data.eventType === "attendance-update" && prefs?.attendance_sms && student.guardian_phone)
       rows.push({
@@ -166,12 +157,29 @@ export const recordAttendance = createServerFn({ method: "POST" })
         event_type: data.eventType,
         recipient: student.guardian_phone,
         body,
-        status: "queued",
       });
     if (rows.length) {
-      await admin.from("notification_outbox").insert(rows);
+      const { data: inserted } = await admin
+        .from("notification_outbox")
+        .insert(rows)
+        .select("id,channel,recipient,subject,body");
+      for (const item of inserted ?? []) {
+        const result =
+          item.channel === "email"
+            ? await sendEmail(item.recipient, item.subject ?? "School attendance update", item.body)
+            : await sendSms(item.recipient, item.body);
+        await admin
+          .from("notification_outbox")
+          .update({
+            status: result.sent ? "sent" : "failed",
+            provider_message_id: result.id ?? null,
+            error_message: result.error ?? null,
+            attempts: 1,
+            sent_at: result.sent ? new Date().toISOString() : null,
+          })
+          .eq("id", item.id);
+      }
     }
-
     return { ok: true as const };
   });
 
@@ -195,43 +203,39 @@ export const recordBulkAttendance = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!membership || !["admin", "teacher"].includes(membership.role))
       throw new Error("Only admins and teachers can record bulk attendance.");
-
+    const timeZone = await getSchoolTimezone(data.schoolId);
     const admin = db();
-
-    const [timeZone, studentsResult] = await Promise.all([
-      getSchoolTimezone(data.schoolId),
-      admin
-        .from("students")
-        .select("id,student_code,full_name")
-        .eq("school_id", data.schoolId)
-        .in("student_code", data.studentCodes) as Promise<{ data: any; error: any }>,
-    ]);
-
-    if (studentsResult.error) throw new Error(studentsResult.error.message);
-    const students = studentsResult.data ?? [];
-    if (!students.length)
-      throw new Error("No matching students were found in this school workspace.");
-
+    const { data: students, error: studentError } = await admin
+      .from("students")
+      .select("id,student_code,full_name")
+      .eq("school_id", data.schoolId)
+      .in("student_code", data.studentCodes);
+    if (studentError) throw new Error(studentError.message);
     const today = getSchoolLocalDate(new Date(), timeZone);
-    const studentIds = students.map((s: any) => s.id);
-    const count = studentIds.length;
-    const message = `${count} students marked ${data.status.replace("_", " ")}`;
-    const tone = data.status === "absent" ? "warning" : "info";
-
-    const { error: rpcError } = await admin.rpc("record_bulk_attendance_v1", {
-      p_school_id: data.schoolId,
-      p_student_ids: studentIds,
-      p_status: data.status,
-      p_recorded_by: context.userId,
-      p_gate: data.gate ?? null,
-      p_recorded_on: today,
-      p_event_type: "bulk-attendance-update",
-      p_message: message,
-      p_tone: tone,
+    const rows = (students ?? []).map((student: any) => ({
+      school_id: data.schoolId,
+      student_id: student.id,
+      status: data.status,
+      recorded_by: context.userId,
+      gate: data.gate ?? null,
+      recorded_on: today,
+    }));
+    if (!rows.length) throw new Error("No matching students were found in this school workspace.");
+    const { error } = await admin
+      .from("attendance_records")
+      .upsert(rows, { onConflict: "school_id,student_id,recorded_on" });
+    if (error) throw new Error(error.message);
+    await admin.from("activity_events").insert({
+      school_id: data.schoolId,
+      actor_id: context.userId,
+      event_type: "bulk-attendance-update",
+      action: "attendance.bulk_update",
+      target_type: "attendance_records",
+      message: `${rows.length} students marked ${data.status.replace("_", " ")}`,
+      tone: data.status === "absent" ? "warning" : "info",
+      metadata: { count: rows.length, status: data.status, date: today },
     });
-    if (rpcError) throw new Error(rpcError.message);
-
-    return { ok: true as const, count };
+    return { ok: true as const, count: rows.length };
   });
 
 const feeReminderInput = z.object({
