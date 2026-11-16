@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useMatchRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { requireRoles } from "@/lib/route-guards";
 import { Plus, Search, UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -23,9 +23,6 @@ const tone: Record<AttendanceStatus, string> = {
 };
 function StudentsPage() {
   const { state, addStudent } = useSchoolStore();
-  const navigate = useNavigate();
-  const matchRoute = useMatchRoute();
-  const studentProfile = matchRoute({ to: "/students/$studentCode", fuzzy: false });
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -75,9 +72,6 @@ function StudentsPage() {
       setError(err instanceof Error ? err.message : "Could not save student");
     }
   };
-
-  if (studentProfile) return <Outlet />;
-
   return (
     <AppShell
       title="Students"
@@ -132,24 +126,7 @@ function StudentsPage() {
               </thead>
               <tbody className="divide-y divide-border">
                 {filtered.map((s) => (
-                  <tr
-                    key={s.id}
-                    role="link"
-                    tabIndex={0}
-                    className="cursor-pointer hover:bg-muted/30 focus-visible:bg-muted/30 focus-visible:outline-none"
-                    onClick={() =>
-                      void navigate({ to: "/students/$studentCode", params: { studentCode: s.id } })
-                    }
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        void navigate({
-                          to: "/students/$studentCode",
-                          params: { studentCode: s.id },
-                        });
-                      }
-                    }}
-                  >
+                  <tr key={s.id} className="hover:bg-muted/30">
                     <td className="px-4 py-3 font-medium">{s.name}</td>
                     <td className="numeric px-4 py-3 text-muted-foreground">{s.id}</td>
                     <td className="px-4 py-3">{s.cls}</td>

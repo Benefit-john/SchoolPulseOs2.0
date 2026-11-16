@@ -38,7 +38,6 @@ import { Route as AuthenticatedParentRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticated/security'
 import { Route as AuthenticatedWelcomeRouteImport } from './routes/_authenticated/welcome'
 import { Route as ApiPaystackWebhookRouteImport } from './routes/api.paystack-webhook'
-import { Route as StudentsStudentCodeRouteImport } from './routes/students.$studentCode'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedParentSectionRouteImport } from './routes/_authenticated/parent.$section'
 import { Route as AuthenticatedParentSettingsRouteImport } from './routes/_authenticated/parent.settings'
@@ -190,11 +189,6 @@ const ApiPaystackWebhookRoute = ApiPaystackWebhookRouteImport.update({
   path: '/api/paystack-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentsStudentCodeRoute = StudentsStudentCodeRouteImport.update({
-  id: '/$studentCode',
-  path: '/$studentCode',
-  getParentRoute: () => StudentsRoute,
-} as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -251,7 +245,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/staff': typeof StaffRoute
-  '/students': typeof StudentsRouteWithChildren
+  '/students': typeof StudentsRoute
   '/terms': typeof TermsRoute
   '/visitors': typeof VisitorsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -259,7 +253,6 @@ export interface FileRoutesByFullPath {
   '/security': typeof AuthenticatedSecurityRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/api/paystack-webhook': typeof ApiPaystackWebhookRoute
-  '/students/$studentCode': typeof StudentsStudentCodeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/parent/$section': typeof AuthenticatedParentSectionRoute
   '/parent/settings': typeof AuthenticatedParentSettingsRoute
@@ -288,7 +281,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/staff': typeof StaffRoute
-  '/students': typeof StudentsRouteWithChildren
+  '/students': typeof StudentsRoute
   '/terms': typeof TermsRoute
   '/visitors': typeof VisitorsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -296,7 +289,6 @@ export interface FileRoutesByTo {
   '/security': typeof AuthenticatedSecurityRoute
   '/welcome': typeof AuthenticatedWelcomeRoute
   '/api/paystack-webhook': typeof ApiPaystackWebhookRoute
-  '/students/$studentCode': typeof StudentsStudentCodeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/parent/$section': typeof AuthenticatedParentSectionRoute
   '/parent/settings': typeof AuthenticatedParentSettingsRoute
@@ -327,7 +319,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/staff': typeof StaffRoute
-  '/students': typeof StudentsRouteWithChildren
+  '/students': typeof StudentsRoute
   '/terms': typeof TermsRoute
   '/visitors': typeof VisitorsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -335,7 +327,6 @@ export interface FileRoutesById {
   '/_authenticated/security': typeof AuthenticatedSecurityRoute
   '/_authenticated/welcome': typeof AuthenticatedWelcomeRoute
   '/api/paystack-webhook': typeof ApiPaystackWebhookRoute
-  '/students/$studentCode': typeof StudentsStudentCodeRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/parent/$section': typeof AuthenticatedParentSectionRoute
   '/_authenticated/parent/settings': typeof AuthenticatedParentSettingsRoute
@@ -374,7 +365,6 @@ export interface FileRouteTypes {
     | '/security'
     | '/welcome'
     | '/api/paystack-webhook'
-    | '/students/$studentCode'
     | '/admin/users'
     | '/parent/$section'
     | '/parent/settings'
@@ -411,7 +401,6 @@ export interface FileRouteTypes {
     | '/security'
     | '/welcome'
     | '/api/paystack-webhook'
-    | '/students/$studentCode'
     | '/admin/users'
     | '/parent/$section'
     | '/parent/settings'
@@ -449,7 +438,6 @@ export interface FileRouteTypes {
     | '/_authenticated/security'
     | '/_authenticated/welcome'
     | '/api/paystack-webhook'
-    | '/students/$studentCode'
     | '/_authenticated/admin/users'
     | '/_authenticated/parent/$section'
     | '/_authenticated/parent/settings'
@@ -480,7 +468,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   StaffRoute: typeof StaffRoute
-  StudentsRoute: typeof StudentsRouteWithChildren
+  StudentsRoute: typeof StudentsRoute
   TermsRoute: typeof TermsRoute
   VisitorsRoute: typeof VisitorsRoute
   ApiPaystackWebhookRoute: typeof ApiPaystackWebhookRoute
@@ -691,13 +679,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPaystackWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/students/$studentCode': {
-      id: '/students/$studentCode'
-      path: '/$studentCode'
-      fullPath: '/students/$studentCode'
-      preLoaderRoute: typeof StudentsStudentCodeRouteImport
-      parentRoute: typeof StudentsRoute
-    }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
       path: '/admin/users'
@@ -793,18 +774,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface StudentsRouteChildren {
-  StudentsStudentCodeRoute: typeof StudentsStudentCodeRoute
-}
-
-const StudentsRouteChildren: StudentsRouteChildren = {
-  StudentsStudentCodeRoute: StudentsStudentCodeRoute,
-}
-
-const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
-  StudentsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -827,7 +796,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   StaffRoute: StaffRoute,
-  StudentsRoute: StudentsRouteWithChildren,
+  StudentsRoute: StudentsRoute,
   TermsRoute: TermsRoute,
   VisitorsRoute: VisitorsRoute,
   ApiPaystackWebhookRoute: ApiPaystackWebhookRoute,
