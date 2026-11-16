@@ -1,6 +1,6 @@
 export const ACTIVE_WORKSPACE_CHANGED = "schoolpulse:active-workspace-changed";
 
-export const ACTIVE_WORKSPACE_KEY = "schoolpulse:active-workspace";
+const ACTIVE_WORKSPACE_KEY = "schoolpulse:active-workspace";
 
 export function getActiveWorkspaceId(): string | null {
   if (typeof window === "undefined") return null;
