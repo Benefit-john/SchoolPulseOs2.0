@@ -99,11 +99,9 @@ export function StrengthMeter({ password }: { password: string }) {
 export function FormAlert({
   tone = "error",
   children,
-  onClose,
 }: {
   tone?: "error" | "success" | "info";
   children: React.ReactNode;
-  onClose?: () => void;
 }) {
   const cls = {
     error: "border-destructive/30 bg-destructive/5 text-destructive",
@@ -113,19 +111,9 @@ export function FormAlert({
   return (
     <div
       role={tone === "error" ? "alert" : "status"}
-      className={cn("flex items-center justify-between gap-3 rounded-md border px-4 py-3 text-sm", cls)}
+      className={cn("rounded-md border px-4 py-3 text-sm", cls)}
     >
-      <div className="flex-1">{children}</div>
-      {onClose ? (
-        <button
-          type="button"
-          onClick={onClose}
-          className="inline-flex size-5 shrink-0 items-center justify-center rounded text-current opacity-70 hover:opacity-100"
-          aria-label="Close message"
-        >
-          <X className="size-4" />
-        </button>
-      ) : null}
+      {children}
     </div>
   );
 }

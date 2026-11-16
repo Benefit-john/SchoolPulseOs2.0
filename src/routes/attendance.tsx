@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { AlertTriangle, CheckCircle2, Clock3, ClipboardList, Loader2, LogOut, UserX, Users, X } from "lucide-react";
+import { CheckCircle2, Clock3, ClipboardList, Loader2, LogOut, UserX, Users } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app-shell";
@@ -40,7 +40,6 @@ function AttendancePage() {
   const bulk = useServerFn(recordBulkAttendance);
   const [selectedClass, setSelectedClass] = useState("all");
   const [bulkStatus, setBulkStatus] = useState<RecordedAttendanceStatus>("Present");
-  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [busyStudents, setBusyStudents] = useState<Map<string, RecordedAttendanceStatus>>(
     () => new Map(),
@@ -55,15 +54,12 @@ function AttendancePage() {
       : state.students.filter((student) => student.cls === selectedClass);
   const update = useCallback(
     async (id: string, name: string, status: RecordedAttendanceStatus) => {
-      setError(null);
       setBusyStudents((prev) => new Map(prev).set(id, status));
       try {
         await setAttendance(id, status);
         toast.success(`${name} marked ${status}`);
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Could not update attendance";
-        setError(msg);
-        toast.error(msg);
+        toast.error(err instanceof Error ? err.message : "Could not update attendance");
       } finally {
         setBusyStudents((prev) => {
           const next = new Map(prev);
@@ -77,7 +73,6 @@ function AttendancePage() {
   const markClass = async () => {
     if (!state.school || !visible.length) return;
     setBusy(true);
-    setError(null);
     try {
       const result = await bulk({
         data: {
@@ -89,35 +84,13 @@ function AttendancePage() {
       toast.success(`${result.count} students marked ${bulkStatus.toLowerCase()}.`);
       await refresh();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Could not mark the class";
-      setError(msg);
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : "Could not mark the class");
     } finally {
       setBusy(false);
     }
   };
   return (
     <AppShell title="Attendance" subtitle="Today's register across all classes">
-      {error ? (
-        <div
-          role="alert"
-          className="hairline-card flex items-center justify-between gap-3 border-danger/30 bg-danger/5 p-4 text-sm text-danger"
-        >
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="size-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-7 shrink-0 text-danger hover:bg-danger/10 hover:text-danger"
-            onClick={() => setError(null)}
-            aria-label="Dismiss error"
-          >
-            <X className="size-4" />
-          </Button>
-        </div>
-      ) : null}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <KpiCard
           label="Students present"
