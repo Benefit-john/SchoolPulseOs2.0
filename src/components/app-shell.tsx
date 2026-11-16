@@ -31,7 +31,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSchoolStore } from "@/lib/school-store";
 import { useTheme } from "@/components/theme-provider";
 import type { AppRole } from "@/lib/auth-client";
-import { getCachedRoles, getUserRoles } from "@/lib/route-guards";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; roles: AppRole[] };
 const sections: { title: string; items: NavItem[] }[] = [
@@ -164,14 +163,15 @@ export function AppShell({
   }, [sidebarOpen]);
   useEffect(() => {
     let active = true;
-    const cached = getCachedRoles();
-    if (cached.length > 0) {
-      setRoles(cached);
-      return;
-    }
-    void getUserRoles().then((r) => {
-      if (active) setRoles(r);
-    });
+    void (async () => {
+      const { data: userResult } = await supabase.auth.getUser();
+      if (!userResult.user) return;
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userResult.user.id);
+      if (active) setRoles((data ?? []).map((row) => row.role as AppRole));
+    })();
     return () => {
       active = false;
     };
@@ -394,23 +394,19 @@ export function AppShell({
                       <p className="text-sm font-semibold">Notifications</p>
                       <p className="text-xs text-muted-foreground">Recent workspace activity</p>
                     </div>
-                    {roles.includes("admin") || roles.includes("bursar") ? (
-                      <Link
-                        to="/notifications"
-                        onClick={() => setNotificationsOpen(false)}
-                        className="text-xs font-semibold text-primary"
-                      >
-                        View all
-                      </Link>
-                    ) : (
-                      <RoleSettingsLink
-                        role={settingsRole}
-                        onClick={() => setNotificationsOpen(false)}
-                        className="text-xs font-semibold text-primary"
-                      >
-                        View all
-                      </RoleSettingsLink>
-                    )}
+                    <a
+                      href={
+                        roles.includes("admin") || roles.includes("bursar")
+                          ? "/notifications"
+                          : settingsRole
+                            ? `/portal/${settingsRole}/settings`
+                            : "/profile"
+                      }
+                      onClick={() => setNotificationsOpen(false)}
+                      className="text-xs font-semibold text-primary"
+                    >
+                      View all
+                    </a>
                   </div>
                   <div className="max-h-72 overflow-y-auto py-2">
                     {notificationLog.slice(0, 5).map((item) => (
@@ -505,28 +501,17 @@ function RoleSettingsLink({
   onClick?: () => void;
   children: ReactNode;
 }) {
-  if (role === "parent") {
-    return (
-      <Link to="/parent/settings" className={className} onClick={onClick}>
-        {children}
-      </Link>
-    );
-  }
-  if (role && role !== "admin") {
-    return (
-      <Link
-        to="/portal/$role/settings"
-        params={{ role }}
-        className={className}
-        onClick={onClick}
-      >
-        {children}
-      </Link>
-    );
-  }
+  const href =
+    role === "parent"
+      ? "/parent/settings"
+      : role === "admin"
+        ? "/profile"
+        : role
+          ? `/portal/${role}/settings`
+          : "/profile";
   return (
-    <Link to="/profile" className={className} onClick={onClick}>
+    <a href={href} className={className} onClick={onClick}>
       {children}
-    </Link>
+    </a>
   );
 }
